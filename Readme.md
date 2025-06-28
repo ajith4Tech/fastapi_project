@@ -5,35 +5,39 @@ This repository contains beginner-friendly learning projects to explore **FastAP
 ---
 
 ## 🔧 Environment Setup
+
+### ✅ What is FastAPI?
+
+FastAPI is a modern, fast (high-performance) web framework for building APIs with Python 3.7+ based on standard Python type hints.
+
+### 💡 Architecture
+
+Webpage → FastAPI server → API response
+
+
+### ⚙️ Python Virtual Environment
+
+Isolated environment to manage project-specific dependencies.
+
+```bash
 # Create virtual environment
 python3 -m venv fastapivenv
 
 # Activate on Unix/Mac
 source fastapivenv/bin/activate
 
-### ✅ What is FastAPI?
-FastAPI is a modern, fast (high-performance) web framework for building APIs with Python 3.7+ based on standard Python type hints.
-
-### 💡 Architecture
-Webpage → FastAPI server → API response
-
-### ⚙️ Python Virtual Environment
-Isolated environment to manage project-specific dependencies.
-
-```bash
-
-
 # Install FastAPI and Uvicorn
 pip install fastapi
 pip install "uvicorn[standard]"
 
 
-
 🌐 ASGI vs WSGI
+
 | Interface | Type         | Framework | Request Handling          |
 | --------- | ------------ | --------- | ------------------------- |
 | **WSGI**  | Synchronous  | Gunicorn  | Sequential                |
 | **ASGI**  | Asynchronous | Uvicorn   | Concurrent, more scalable |
+
 
 
 🧪 Running the FastAPI App
@@ -92,6 +96,8 @@ async def read_book(book_title: str):
     ...
 
 ✅ Note: Order matters in path parameters.
+
+
 4. 🔎 Query Parameters
 
 Used for filtering/sorting data via URL queries.
@@ -103,8 +109,8 @@ async def read_by_query(category: Optional[str] = None):
 5. 🧠 Case-Insensitive Matching
 
 book.get('title').casefold() == book_title.casefold()
-
 Use .casefold() for Unicode-aware, case-insensitive comparisons (e.g., "straße".casefold() vs "strasse").
+
 6. 🧾 Request Body with Pydantic
 
 from pydantic import BaseModel, Field
@@ -114,6 +120,7 @@ class BookRequest(BaseModel):
     rating: int = Field(gt=1, le=5)
 
 Use .model_dump() in Pydantic v2 to extract data.
+
 7. 🚦 HTTP Status Codes & Exceptions
 
 from fastapi import status, HTTPException
@@ -121,6 +128,17 @@ from fastapi import status, HTTPException
 @app.get("/books/{book_id}", status_code=status.HTTP_200_OK)
 async def read_book(book_id: int):
     raise HTTPException(status_code=404, detail="Book not found")
+
+| Code | Meaning               |
+| ---- | --------------------- |
+| 200  | OK                    |
+| 201  | Created               |
+| 204  | No Content            |
+| 400  | Bad Request           |
+| 404  | Not Found             |
+| 422  | Unprocessable Entity  |
+| 500  | Internal Server Error |
+
 
 
 8. ✅ Validation for Path & Query
@@ -142,6 +160,7 @@ def find_book_id(book: Book):
     return book
 
 📁 File Overview
-File Name	Concepts Covered
-basic_version.py	CRUD, Path & Query Params, Request Body basics
-project_2.py	Pydantic, Field validation, Status codes, Exception handling, ID generation
+| File Name          | Concepts Covered                                                            |
+| ------------------ | --------------------------------------------------------------------------- |
+| `basic_version.py` | CRUD, Path & Query Params, Request Body basics                              |
+| `project_2.py`     | Pydantic, Field validation, Status codes, Exception handling, ID generation |
