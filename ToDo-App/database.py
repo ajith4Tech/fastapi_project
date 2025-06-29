@@ -9,7 +9,7 @@ It also defines a base class for declarative models.
 from sqlalchemy import create_engine    #create engine is used to create a connection to the database
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-SQLALCHEMY_DATABASE_URL = "sqlite:///./todo.db" #location of the database file
+SQLALCHEMY_DATABASE_URL = "sqlite:///./todoapp.db" #location of the database file
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
