@@ -1,3 +1,6 @@
 fastapivenv/
 __pycache__/
 *.pyc
+
+# SQLite database
+ToDo-App/todo.db
