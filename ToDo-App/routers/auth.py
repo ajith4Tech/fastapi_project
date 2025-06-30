@@ -1,6 +1,6 @@
 #Handle all authentication-related routes in a this module.
 
-import random
+from datetime import timedelta, datetime, timezone
 from passlib.context import CryptContext
 from typing import Annotated
 from fastapi import APIRouter, HTTPException, Depends
@@ -9,15 +9,27 @@ from pydantic import BaseModel
 from models import Users
 from database import SessionLocal
 from sqlalchemy.orm import Session
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
+from jose import jwt, JWTError #json web-token for authorization and authentication jose provides jwt, jws, jse 
+
 """
 APIRouter is a FastAPI class used to create route groups in a modular way,
 improving code readability, organization, and scalability of the application.
 """
 
-router = APIRouter() #router is an instance of APIRouter that will be used to define the routes for this module.
+router = APIRouter(
+    prefix="/auth", #prefix is a string that will be prepended to all the routes in this router
+    tags=["auth"], #tags is a list of strings that will be used to group routes in the OpenAPI documentation
+    )
+
+# JWT configuration, Secret Key and Algorithm for generating signatures
+SECRET_KEY = 'e4dd5148d49c824fc212f5f1a2e830c9ba942becd926d9ed53ff31ecb4202e06'
+ALGORITHM = 'HS256'
 
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
+oauth2_bear = OAuth2PasswordBearer(tokenUrl='auth/token')
+
+
 
 class CreateUserRequest(BaseModel):
     username: str
@@ -39,6 +51,11 @@ class CreateUserRequest(BaseModel):
             }
         }
     }
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
 def get_db():
     db = SessionLocal()  # Create a new session for each request
     try:
@@ -55,10 +72,42 @@ def authenticate_user(username: str, password: str, db):
         return False
     if not bcrypt_context.verify(password, user.hashed_password):
         return False
-    return True
+    return user
+
+def create_access_token(username: str, user_id: int, role: str ,expires_delta: timedelta):
+    encode = {
+        "sub": username,
+        "id": user_id,
+        "role": role
+        }
+    expires = datetime.now(timezone.utc) + expires_delta
+    encode.update({'exp':expires})
+    return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
-@router.post("/auth",status_code=status.HTTP_201_CREATED)
+async def get_current_user(token: Annotated[str, Depends(oauth2_bear)], db: DB_DEPENDENCY):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        user_id: int = payload.get("id")
+        user_role : str = payload.get("role")
+        if username is None or user_id is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+    user = db.query(Users).filter(Users.username == username).first()
+    if user is None:
+        raise credentials_exception
+    return {"username": user.username, "user_id": user.user_id, "user_role": user.role}
+
+
+
+@router.post("/",status_code=status.HTTP_201_CREATED)
 async def create_user(db: DB_DEPENDENCY, 
                       create_user_request: CreateUserRequest):
     create_user_model = Users(
@@ -74,7 +123,7 @@ async def create_user(db: DB_DEPENDENCY,
     db.commit()
     db.refresh(create_user_model)
 
-@router.post("/token", status_code=status.HTTP_201_CREATED)
+@router.post("/token", response_model=Token, status_code=status.HTTP_201_CREATED)
 async def login_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
                              db: DB_DEPENDENCY):
     user = authenticate_user(form_data.username, form_data.password, db)
@@ -84,7 +133,8 @@ async def login_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Dep
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    return {"access_token": "XAsnjnjnfaiwml", "token_type": "bearer"}
+    token = create_access_token(form_data.username, user.user_id, user.role,timedelta(minutes=15))
+    return {"access_token": token, "token_type": "bearer"}
 
 
 
