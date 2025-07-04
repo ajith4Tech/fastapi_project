@@ -112,7 +112,7 @@ I have documented everything I've learned during this project including:
 
 - PostgreSQL Setup
 
-➡️ Read My Full Notes Here
+➡️ Read My Full Notes Here : https://github.com/ajith4Tech/fastapi_project/blob/master/ToDo-App/Notes.md
 
 🙌 Acknowledgements
 
