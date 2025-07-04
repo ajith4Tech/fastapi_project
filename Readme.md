@@ -64,59 +64,65 @@ fastapi_project/
 ```bash
 git clone https://github.com/ajith4Tech/fastapi_project.git
 cd fastapi_project
+```
+2. **Set up virtual environment**:
 
-    Set up virtual environment:
-
+```
 python -m venv venv
 source venv/bin/activate
+```
+3. **Install Dependencies**:
 
-    Install Dependencies:
-
+```
 pip install -r requirements.txt
+```
 
-    Configure PostgreSQL Database:
+4. **Configure PostgreSQL Database**:
 
-        Create DB & User in PostgreSQL.
+    - Create DB & User in PostgreSQL.
 
-        Update DB connection in alembic.ini and database.py:
-
+    - Update DB connection in alembic.ini and database.py:
+```
 SQLALCHEMY_DATABASE_URL = "postgresql://<username>:<password>@localhost/<dbname>"
+```
+    
+5. **Run Alembic Migrations**:
 
-    Run Alembic Migrations:
-
+```
 alembic upgrade head
-
-    Run the App:
-
+```
+6. Run the App:
+```
 uvicorn main:app --reload
+```
 
 ✍️ My Learning Notes
 
 I have documented everything I've learned during this project including:
 
-    Routers & Modularization
+- Routers & Modularization
 
-    JWT Authentication
+- JWT Authentication
 
-    Password Hashing with Bcrypt
+- Password Hashing with Bcrypt
 
-    OAuth2 Flows
+- OAuth2 Flows
 
-    Alembic Migrations
+- Alembic Migrations
 
-    PostgreSQL Setup
+- PostgreSQL Setup
 
 ➡️ Read My Full Notes Here
 
 🙌 Acknowledgements
 
-    FastAPI Official Docs: https://fastapi.tiangolo.com/
+- FastAPI Official Docs: https://fastapi.tiangolo.com/
 
-    PostgreSQL Docs
+- PostgreSQL Docs
 
-    Alembic Migration Docs
+- Alembic Migration Docs
 
 ⭐ Star the repo if you found it helpful!
-🧑‍💻 Author
 
+🧑‍💻 Author
 Curated by Ajith B M
