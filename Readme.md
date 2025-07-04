@@ -1,166 +1,122 @@
-# 🚀 FastAPI Learning Projects
+# FastAPI Project 🚀
 
-This repository contains beginner-friendly learning projects to explore **FastAPI** and modern API development with Python.
+Welcome to my FastAPI Project!  
+This project is designed to help developers learn FastAPI by building a real-world backend application, progressing from basic concepts to intermediate and production-ready features.
+
+## 📚 About This Project
+
+This repository walks through three main phases of backend development using FastAPI:
+
+### ✅ Version 1: Basic To-Do API
+- Built using **FastAPI** and **SQLite**.
+- Implements CRUD operations for To-Do items.
+- Uses **APIRouter** to structure routes modularly.
+
+### ✅ Version 2: Authentication & JWT
+- Implements **User Authentication** with **OAuth2** and **JWT Tokens**.
+- Passwords are hashed securely using **Passlib** with **bcrypt**.
+- Users can:
+  - Login & receive a JWT token.
+  - Retrieve user details (excluding password).
+  - Update their password securely.
+- Protects routes with authentication dependencies.
+
+### ✅ Version 3: Production-Ready Setup with PostgreSQL & Alembic
+- Switched from SQLite to **PostgreSQL** for production-level database management.
+- Integrated **Alembic** for database migrations.
+- Added environment-based database configuration for flexibility and security.
 
 ---
 
-## 🔧 Environment Setup
+## 🔥 Key Technologies Used
+- **FastAPI** (Python Web Framework)
+- **SQLAlchemy** (ORM)
+- **PostgreSQL** (Database)
+- **Alembic** (Database Migrations)
+- **JWT** for Authentication
+- **OAuth2PasswordBearer** for token-based authentication
+- **bcrypt** (Password Hashing)
+- **PgAdmin** for PostgreSQL Management
 
-### ✅ What is FastAPI?
+---
 
-FastAPI is a modern, fast (high-performance) web framework for building APIs with Python 3.7+ based on standard Python type hints.
+## 📂 Project Structure
+fastapi_project/
+│
+├── ToDo-App/ # Main App Directory
+│ ├── alembic/ # Alembic Migration Files
+│ ├── alembic.ini # Alembic Config File
+│ ├── routers/ # API Routers (auth, todos, users)
+│ ├── models.py # SQLAlchemy Models
+│ ├── database.py # DB Connection Setup
+│ ├── main.py # FastAPI Entry Point
+│ └── notes.md # My Learning Notes (Deep Dive)
+│
+├── .gitignore
+└── README.md
 
-### 💡 Architecture
 
-Webpage → FastAPI server → API response
+---
 
+## 🛠️ Getting Started
 
-### ⚙️ Python Virtual Environment
-
-Isolated environment to manage project-specific dependencies.
-
+1. **Clone the repo**:
 ```bash
-# Create virtual environment
-python3 -m venv fastapivenv
+git clone https://github.com/ajith4Tech/fastapi_project.git
+cd fastapi_project
 
-# Activate on Unix/Mac
-source fastapivenv/bin/activate
+    Set up virtual environment:
 
-# Install FastAPI and Uvicorn
-pip install fastapi
-pip install "uvicorn[standard]"
+python -m venv venv
+source venv/bin/activate
 
+    Install Dependencies:
 
-🌐 ASGI vs WSGI
+pip install -r requirements.txt
 
-| Interface | Type         | Framework | Request Handling          |
-| --------- | ------------ | --------- | ------------------------- |
-| **WSGI**  | Synchronous  | Gunicorn  | Sequential                |
-| **ASGI**  | Asynchronous | Uvicorn   | Concurrent, more scalable |
+    Configure PostgreSQL Database:
 
+        Create DB & User in PostgreSQL.
 
+        Update DB connection in alembic.ini and database.py:
 
-🧪 Running the FastAPI App
+SQLALCHEMY_DATABASE_URL = "postgresql://<username>:<password>@localhost/<dbname>"
 
-# Run with Uvicorn (for development)
-uvicorn basic_version:app --reload
+    Run Alembic Migrations:
 
-# (For newer versions)
-fastapi run basic_version.py
+alembic upgrade head
 
-🧱 Core Concepts with Examples
-1. ✅ Basic API Setup
+    Run the App:
 
-from fastapi import FastAPI
+uvicorn main:app --reload
 
-app = FastAPI()
+✍️ My Learning Notes
 
-@app.get("/")
-async def root():
-    return {"message": "Welcome to the FastAPI Project!"}
+I have documented everything I've learned during this project including:
 
-2. 📌 CRUD Operations (Books)
-📖 GET - Read All Books
+    Routers & Modularization
 
-@app.get("/books")
-async def read_all_books():
-    return BOOKS
+    JWT Authentication
 
-➕ POST - Add a Book
+    Password Hashing with Bcrypt
 
-from fastapi import Body
+    OAuth2 Flows
 
-@app.post("/books/add-book")
-async def add_book(new_book = Body()):
-    BOOKS.append(new_book)
-    return {"message": "Book added successfully"}
+    Alembic Migrations
 
-📝 PUT - Update Book
+    PostgreSQL Setup
 
-@app.put("/books/update-book/{book_title}")
-async def update_book(book_title: str, updated_book = Body()):
-    ...
+➡️ Read My Full Notes Here
 
-❌ DELETE - Delete Book
+🙌 Acknowledgements
 
-@app.delete("/books/delete-book/{book_title}")
-async def delete_book(book_title: str):
-    ...
+    FastAPI Official Docs: https://fastapi.tiangolo.com/
 
-3. 🛣️ Path Parameters
+    PostgreSQL Docs
 
-Used to identify resources dynamically via URL.
+    Alembic Migration Docs
 
-@app.get("/books/book-title/{book_title}")
-async def read_book(book_title: str):
-    ...
+⭐ Star the repo if you found it helpful!
+🧑‍💻 Author
 
-✅ Note: Order matters in path parameters.
-
-
-4. 🔎 Query Parameters
-
-Used for filtering/sorting data via URL queries.
-
-@app.get("/books/")
-async def read_by_query(category: Optional[str] = None):
-
-
-5. 🧠 Case-Insensitive Matching
-
-book.get('title').casefold() == book_title.casefold()
-Use .casefold() for Unicode-aware, case-insensitive comparisons (e.g., "straße".casefold() vs "strasse").
-
-6. 🧾 Request Body with Pydantic
-
-from pydantic import BaseModel, Field
-
-class BookRequest(BaseModel):
-    book_title: str = Field(min_length=3)
-    rating: int = Field(gt=1, le=5)
-
-Use .model_dump() in Pydantic v2 to extract data.
-
-7. 🚦 HTTP Status Codes & Exceptions
-
-from fastapi import status, HTTPException
-
-@app.get("/books/{book_id}", status_code=status.HTTP_200_OK)
-async def read_book(book_id: int):
-    raise HTTPException(status_code=404, detail="Book not found")
-
-| Code | Meaning               |
-| ---- | --------------------- |
-| 200  | OK                    |
-| 201  | Created               |
-| 204  | No Content            |
-| 400  | Bad Request           |
-| 404  | Not Found             |
-| 422  | Unprocessable Entity  |
-| 500  | Internal Server Error |
-
-
-
-8. ✅ Validation for Path & Query
-
-from fastapi import Path, Query
-
-@app.get("/books/{book_id}")
-async def get_book(book_id: int = Path(gt=0)):
-    ...
-
-@app.get("/books/")
-async def get_books(book_rating: Optional[int] = Query(gt=0, lt=6)):
-    ...
-
-9. 🧠 Dynamic Book ID Generation
-
-def find_book_id(book: Book):
-    book.book_id = 1 if len(BOOKS) == 0 else BOOKS[-1].book_id + 1
-    return book
-
-📁 File Overview
-| File Name          | Concepts Covered                                                            |
-| ------------------ | --------------------------------------------------------------------------- |
-| `basic_version.py` | CRUD, Path & Query Params, Request Body basics                              |
-| `project_2.py`     | Pydantic, Field validation, Status codes, Exception handling, ID generation |
+Curated by Ajith B M
