@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Optional
 from fastapi import  APIRouter, Depends, HTTPException, Path
 from models import ToDoItem, Users # Import the Todos model
 from database import SessionLocal
@@ -25,6 +25,7 @@ class UserResponse(BaseModel):
     first_name: str
     last_name: str
     is_active: bool
+    phone_number: Optional[str]
     
     class Config:
         orm_mode = True
@@ -73,4 +74,17 @@ async def update_user_password(
 
     raise HTTPException(status_code=404, detail="User not found")
 
-    
+
+@router.put("/add-phone", status_code=status.HTTP_204_NO_CONTENT)
+async def update_user_phone(user: USER_DEPENDENCY,
+                            db: DB_DEPENDENCY,
+                            phone_number: str):
+    if user is None:
+        raise HTTPException(status_code=401, detail="Authentication Failed")
+    user_id = user.get("user_id")
+    user_details = db.query(Users).filter(Users.user_id == user_id).first()
+    if user_details:
+        user_details.phone_number = phone_number
+        db.commit()
+        return {"message": "Phone number updated successfully"}
+    raise HTTPException(status_code=404, detail="User not found")

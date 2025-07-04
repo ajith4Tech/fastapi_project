@@ -38,6 +38,7 @@ class CreateUserRequest(BaseModel):
     last_name: str
     role: str
     password: str
+    phone_number: str
 
     model_config = {
         "json_schema_extra": {
@@ -47,7 +48,8 @@ class CreateUserRequest(BaseModel):
                 "first_name": "John",
                 "last_name": "Doe",
                 "role": "user",
-                "password": "securepassword123"
+                "password": "securepassword123",
+                "phone_number": "9876543210"
             }
         }
     }
@@ -65,7 +67,6 @@ def get_db():
 
 
 DB_DEPENDENCY = Annotated[Session, Depends(get_db)] # Annotated type for dependency injection of the database session
-
 def authenticate_user(username: str, password: str, db):
     user = db.query(Users).filter(Users.username == username).first()
     if not user:
@@ -106,7 +107,6 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bear)], db: DB_D
     return {"username": user.username, "user_id": user.user_id, "user_role": user.role}
 
 
-
 @router.post("/",status_code=status.HTTP_201_CREATED)
 async def create_user(db: DB_DEPENDENCY, 
                       create_user_request: CreateUserRequest):
@@ -117,7 +117,8 @@ async def create_user(db: DB_DEPENDENCY,
         last_name=create_user_request.last_name,
         role=create_user_request.role,
         hashed_password=bcrypt_context.hash(create_user_request.password),
-        is_active=True
+        is_active=True,
+        phone_number=create_user_request.phone_number
     )
     db.add(create_user_model)
     db.commit()
@@ -135,7 +136,6 @@ async def login_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Dep
         )
     token = create_access_token(form_data.username, user.user_id, user.role,timedelta(minutes=15))
     return {"access_token": token, "token_type": "bearer"}
-
 
 
         
