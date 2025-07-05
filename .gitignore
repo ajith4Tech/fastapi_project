@@ -3,4 +3,4 @@ __pycache__/
 *.pyc
 
 # SQLite database
-ToDo-App/todoapp.db
+ToDo-App/testdb.db
