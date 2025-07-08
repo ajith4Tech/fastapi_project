@@ -390,3 +390,91 @@ to run alembic downgrade migrate we use:  `alembic downgrade -1`
 Changes in alembic.ini → put Database path for `sqlalchemy.url`
 
 in env.py: import models and put the `target_metadata` = `models.Base.metadata`
+
+**Pytest:** Testing framework for python → simple, scalable and has ability to handle both unit and integration tests. 
+
+→ has native assertions
+
+→ fixtures - feature setup and teadown
+
+→ parameterized testing - run same tests with different data
+
+To install Pytest: `pip install pytest`
+
+→ Assertions → assertions are statements that check whether a specific condition is true during the execution of a program
+
+→ Pytest will run all tests automatically that sit within files that have the name `test` in them. 
+
+→ if condition is `true` = test passes
+
+→ if condition is `false` = test fails
+
+Pytest Basics:
+
+1. validate integers
+2. validate instances
+3. validate booleans
+4. validate types
+5. validate greater than and less than
+
+pytest objects:
+
+1. Fixtures: Fixtures are functions decorated with @pytest.fixture that provide a defined, reliable, and consistent context for tests.
+
+`TestClient` : in FastAPI, It is a utility for testing FastAPI applications without needing to run a live server. this comes form `fastapi.testclient`
+
+→ import the app to test file: `from main import app`  
+
+→ create a client instance: `client = TestClient(app)`
+
+→ to disable warning: `pytest --disable-warnings`
+
+→ Setup Test Dependencies and Database: 
+
+→ create a fake database that can store data.
+
+→ create testing dependencies that are separate from our production dependencies.
+
+→ This way we can do integration testing to make sure our entire project is working correctly when we run our tests. 
+
+→ App is live  = production dependencies
+
+→ App is testing = testing dependencies
+
+→ A connection pool is a standard technique used to maintain long running connections in memory for efficient re-use.
+
+→ create an engine and create session
+
+→ How does FastAPI know that we are in testing environment:
+
+→ client = TestcClient(app) instead of app = FastAPI()
+
+→ We need to override dependency: ex: db_dependency, user_dependency
+
+while testing: test for both cases: → if found and if not found. 
+
+`pytest-asyncio`  →  *async def functions are not natively supported*  hence we use pytest-asyncio is a pytest plugin. It facilitates testing of code that uses the asyncio library. pytest-asyncio provides support for coroutines as test functions. This allows users to *await* code inside their tests.
+
+to install `pytest-asyncio`:  `pip install pytest-asyncio`
+
+@pytest.mark.asyncio   
+
+Full Stack:
+
+1. Jinja Templating
+    1.  Jinja is Fast, Expressive and extensible templating language. 
+    2. Able to write cide similar to python in the DOM
+    3. The template is passed data to render within the final document
+    4. Jinja tags are similar to HTML and helps working with backend data. 
+    5. In jinja templating we can use for loop and if else statements
+    6. to install `pip install jinja2`
+    
+2. aiofiles
+    1.  it is an Apache2 licensed library. 
+    2. used for handling local disk files in asyncio applications. 
+    3. simple analogy is: we request for disk writing or reading, pushes it to background and notifies once its done. in the mean time we can handle other requests. 
+    4. to install: `pip install aiofiles`
+3. bootstrap:
+    1. Bootstrap is a free front-end framework for faster and easier web development
+
+To return a template, Jinja2Templates need to accept the requests. to handle that in fastapi, we use Request class of Fastapi.

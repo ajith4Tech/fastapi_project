@@ -1,60 +1,96 @@
-# FastAPI Project 🚀
+# 🚀 FastAPI Project
 
 Welcome to my FastAPI Project!  
-This project is designed to help developers learn FastAPI by building a real-world backend application, progressing from basic concepts to intermediate and production-ready features.
+This project is designed to help developers learn FastAPI by building a real-world backend application, progressing from basic concepts to intermediate and production-ready features — now extended with **frontend integration** and **testing**!
+
+---
 
 ## 📚 About This Project
 
-This repository walks through three main phases of backend development using FastAPI:
+This repository walks through **three main phases** of backend development using FastAPI, along with an added **frontend layer** and **testing suite**:
 
 ### ✅ Version 1: Basic To-Do API
 - Built using **FastAPI** and **SQLite**.
-- Implements CRUD operations for To-Do items.
+- Implements **CRUD** operations for To-Do items.
 - Uses **APIRouter** to structure routes modularly.
 
 ### ✅ Version 2: Authentication & JWT
 - Implements **User Authentication** with **OAuth2** and **JWT Tokens**.
-- Passwords are hashed securely using **Passlib** with **bcrypt**.
-- Users can:
-  - Login & receive a JWT token.
+- Passwords are securely hashed using **Passlib** with **bcrypt**.
+- Features:
+  - Login with JWT Token issuance.
   - Retrieve user details (excluding password).
-  - Update their password securely.
-- Protects routes with authentication dependencies.
+  - Password update functionality.
+- Protected Routes with Authentication Dependencies.
 
 ### ✅ Version 3: Production-Ready Setup with PostgreSQL & Alembic
-- Switched from SQLite to **PostgreSQL** for production-level database management.
+- Switched to **PostgreSQL** for production-grade DB.
 - Integrated **Alembic** for database migrations.
-- Added environment-based database configuration for flexibility and security.
+- Environment-based DB configurations for flexibility and security.
+
+### ✅ Version 4: Frontend Integration with Jinja2 + Bootstrap
+- **Jinja2 Templates** for Server-side Rendering.
+- **Bootstrap 5** for UI Styling.
+- **Vanilla JavaScript** (Fetch API) for API interactions:
+  - Registration & Login Forms.
+  - Password Match Validation.
+  - ToDo CRUD via Frontend.
+  - JWT Cookie Management for Authenticated Actions.
+- Static Files Management (CSS, JS, etc.) via **Starlette StaticFiles**.
+
+---
+
+### ✅ Version 5: Testing with Pytest
+- Added **automated testing** using **Pytest** for APIs and authentication flows.
+- Key Features:
+  - Test DB setup using **SQLite in-memory**.
+  - Test Cases Cover:
+    - User Registration
+    - JWT Authentication
+    - ToDo CRUD APIs
+  - FastAPI’s **TestClient** for HTTP requests simulation.
+- Ensures reliability and future-proofing of the app.
 
 ---
 
 ## 🔥 Key Technologies Used
-- **FastAPI** (Python Web Framework)
+- **FastAPI** (Backend)
 - **SQLAlchemy** (ORM)
 - **PostgreSQL** (Database)
-- **Alembic** (Database Migrations)
-- **JWT** for Authentication
-- **OAuth2PasswordBearer** for token-based authentication
+- **Alembic** (Migrations)
+- **Jinja2** (Templating Engine)
+- **Bootstrap 5** (UI Styling)
+- **Vanilla JS** (Frontend Logic)
+- **JWT** + **OAuth2PasswordBearer** (Authentication)
 - **bcrypt** (Password Hashing)
-- **PgAdmin** for PostgreSQL Management
+- **aiofiles** + **Starlette StaticFiles** (Static Asset Management)
+- **Pytest** (Testing Framework)
 
 ---
 
 ## 📂 Project Structure
+
 fastapi_project/
 │
 ├── ToDo-App/ # Main App Directory
 │ ├── alembic/ # Alembic Migration Files
 │ ├── alembic.ini # Alembic Config File
-│ ├── routers/ # API Routers (auth, todos, users)
+│ ├── routers/ # API Routers (auth, todos, users, admin)
 │ ├── models.py # SQLAlchemy Models
 │ ├── database.py # DB Connection Setup
 │ ├── main.py # FastAPI Entry Point
-│ └── notes.md # My Learning Notes (Deep Dive)
+│ ├── templates/ # Jinja2 Templates (HTML Pages)
+│ │ ├── layout.html # Base Layout
+│ │ ├── home.html # Homepage
+│ │ ├── auth/ # Login, Register Pages
+│ │ └── todos/ # ToDo Pages (CRUD)
+│ ├── static/ # Static Files (CSS, JS, Bootstrap Assets)
+│ │ ├── css/ # Stylesheets
+│ │ └── js/ # JavaScript Files (Fetch API Logic)
+│ └── notes.md # My Learning Notes
 │
 ├── .gitignore
 └── README.md
-
 
 ---
 
@@ -112,6 +148,8 @@ I have documented everything I've learned during this project including:
 
 - PostgreSQL Setup
 
+- Jinja2 Templating & Frontend Integration
+
 ➡️ Read My Full Notes Here : https://github.com/ajith4Tech/fastapi_project/blob/master/ToDo-App/Notes.md
 
 🙌 Acknowledgements
@@ -121,6 +159,10 @@ I have documented everything I've learned during this project including:
 - PostgreSQL Docs
 
 - Alembic Migration Docs
+
+- Pytest Docs
+ 
+- Bootstrap Docs
 
 ⭐ Star the repo if you found it helpful!
 
