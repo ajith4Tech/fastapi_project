@@ -3,7 +3,7 @@
 from datetime import timedelta, datetime, timezone
 from passlib.context import CryptContext
 from typing import Annotated
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Request
 from starlette import status  
 from pydantic import BaseModel  
 from models import Users
@@ -11,7 +11,7 @@ from database import SessionLocal
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import jwt, JWTError #json web-token for authorization and authentication jose provides jwt, jws, jse 
-
+from fastapi.templating import Jinja2Templates
 """
 APIRouter is a FastAPI class used to create route groups in a modular way,
 improving code readability, organization, and scalability of the application.
@@ -67,6 +67,18 @@ def get_db():
 
 
 DB_DEPENDENCY = Annotated[Session, Depends(get_db)] # Annotated type for dependency injection of the database session
+
+templates = Jinja2Templates(directory="templates")
+
+@router.get("/login-page")
+def render_login_page(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
+
+@router.get("/register-page")
+def render_register_page(request: Request):
+    return templates.TemplateResponse("register.html", {"request": request})
+
+###ENDPOINTS####
 def authenticate_user(username: str, password: str, db):
     user = db.query(Users).filter(Users.username == username).first()
     if not user:
